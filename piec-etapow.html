@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>No Limits Pięć Etapów</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Jost:wght@300;400;500&display=swap">
+<style>
+/* Layout: kierunek "Atelier". Strona główna = pięć pionowych pasów (łańcuch produkcji I–V) w ciemnej ramie galerii;
+   podstrony = jasny papier, ciemny pas hero, lista realizacji. Jeden świadomy wygląd (bez trybu jasny/ciemny). */
+:root{
+  --ink:#0f0e0d;        /* ciepła czerń, tło galerii */
+  --ink-2:#1a1816;      /* tło pasów */
+  --ivory:#ece6dc;      /* papier, tekst na czerni */
+  --paper:#f6f2eb;      /* tło podstron */
+  --stone:#8a8178;      /* podpisy, linie */
+  --magenta:#b01a5f;    /* kolor z logo, tylko akcent */
+  --serif:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --sans:"Jost","Futura","Century Gothic","Helvetica Neue",Arial,sans-serif;
+  --frame:clamp(16px,1.8vw,28px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--ink);color:var(--ivory);font-family:var(--sans);font-weight:300;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:1px solid var(--magenta);outline-offset:3px}
+.label{font-family:var(--sans);font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase}
+
+/* ---------- rama strony głównej ---------- */
+.app{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);padding-inline:var(--frame)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:30px;height:30px;border-radius:50%;background:var(--magenta);display:grid;place-items:center;font-family:var(--serif);font-style:italic;font-size:15px;color:var(--paper);line-height:1}
+.word{font-family:var(--sans);font-weight:400;letter-spacing:.34em;font-size:13px}
+.word small{color:var(--stone);letter-spacing:.34em;font-size:13px;margin-left:.3em}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.4vw,34px)}
+.nav a{position:relative;padding-block:4px}
+.nav a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--magenta);transition:right .4s}
+.nav a:hover::after{right:0}
+.social{display:flex;gap:14px}
+.social svg{width:16px;height:16px;display:block;fill:none;stroke:currentColor;stroke-width:1.3}
+.lang{color:var(--stone)}
+.lang b{color:var(--ivory);font-weight:400}
+
+.home{display:flex;gap:6px;min-height:0;min-width:0;overflow:hidden}
+.panel{position:relative;flex:1 1 0;min-width:0;overflow:hidden;background:var(--ink-2);transition:flex-grow .8s cubic-bezier(.2,.7,.1,1)}
+.home:hover .panel{flex-grow:.82}
+.home .panel:hover,.home .panel:focus-visible{flex-grow:2.3}
+.panel canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.2,.7,.1,1),opacity .8s;opacity:.78}
+.panel:hover canvas{transform:scale(1.05);opacity:1}
+.panel::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(15,14,13,.88),rgba(15,14,13,0) 55%)}
+.p-txt{position:absolute;left:clamp(14px,1.6vw,26px);right:clamp(14px,1.6vw,26px);bottom:clamp(18px,3vh,34px);z-index:1}
+.p-num{font-family:var(--serif);font-style:italic;color:var(--stone);font-size:15px}
+.p-name{font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.3vw,38px);line-height:1.05;margin:.2em 0 0;letter-spacing:-.01em;overflow-wrap:anywhere}
+.p-more{display:block;max-width:30ch;margin-top:12px;color:var(--ivory);opacity:0;transform:translateY(8px);transition:opacity .5s .15s,transform .5s .15s;font-size:14px}
+.p-more .label{display:inline-block;margin-top:12px;border-bottom:1px solid var(--magenta);padding-bottom:3px}
+.panel:hover .p-more,.panel:focus-visible .p-more{opacity:1;transform:none}
+
+.foot{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:14px 18px;color:var(--stone)}
+.thesis{font-family:var(--serif);font-style:italic;color:var(--ivory);font-size:16px;white-space:nowrap}
+.clients{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-align:right;-webkit-mask-image:linear-gradient(to right,transparent,#000 18%);mask-image:linear-gradient(to right,transparent,#000 18%)}
+.clients span{margin-left:22px}
+
+/* ---------- podstrony ---------- */
+.view{position:fixed;inset:0;overflow:auto;background:var(--paper);color:var(--ink);z-index:5;color-scheme:light}
+.view .top{padding-inline:var(--frame);position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);z-index:2;border-bottom:1px solid rgba(15,14,13,.08)}
+.view .word small{color:var(--stone)}
+.back{display:flex;align-items:center;gap:10px}
+.back span{font-size:18px;line-height:1}
+.wrap{padding-inline:var(--frame);max-width:1320px;margin-inline:auto}
+.hero{position:relative;height:clamp(260px,46vh,480px);background:var(--ink);color:var(--ivory);overflow:hidden;margin-top:var(--frame)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(15,14,13,.75),rgba(15,14,13,0) 60%)}
+.hero-txt{position:absolute;left:clamp(18px,3vw,48px);bottom:clamp(18px,4vh,44px);right:18px;z-index:1}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,7vw,96px);line-height:.95;margin:.15em 0 0;letter-spacing:-.02em;text-wrap:balance}
+.hero .label{color:var(--stone)}
+.intro{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,4fr);gap:clamp(24px,6vw,96px);padding-block:clamp(40px,8vh,88px)}
+.lead{font-family:var(--serif);font-size:clamp(21px,2.1vw,28px);line-height:1.35;margin:0;max-width:30ch;text-wrap:pretty}
+.scope{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.scope li{padding-block:14px;border-top:1px solid rgba(15,14,13,.14);display:flex;gap:16px}
+.scope li:last-child{border-bottom:1px solid rgba(15,14,13,.14)}
+.scope li i{font-family:var(--serif);color:var(--magenta);min-width:1.4em}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-bottom:1px solid var(--ink);padding-bottom:12px;margin-bottom:24px}
+.sec-h h2{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3vw,40px);margin:0}
+.sec-h .label{color:var(--stone)}
+.works{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:clamp(16px,2vw,28px) clamp(14px,1.6vw,22px)}
+.work{display:grid;gap:10px}
+.work .img{aspect-ratio:4/5;max-width:100%;background:var(--ink);position:relative;overflow:hidden}
+.work canvas{position:absolute;inset:0;width:100%;height:100%;transition:transform 1.2s cubic-bezier(.2,.7,.1,1)}
+.work:hover canvas{transform:scale(1.04)}
+.work .meta{display:flex;justify-content:space-between;gap:12px;color:var(--stone)}
+.work h3{font-family:var(--serif);font-weight:400;font-size:20px;margin:0;line-height:1.2}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.chip{border:1px solid rgba(15,14,13,.25);padding:7px 14px;border-radius:999px;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.ig{padding-block:clamp(48px,9vh,96px) 0}
+.ig-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.ig-grid div{aspect-ratio:1;background:var(--ink);position:relative;overflow:hidden}
+.ig-grid canvas{position:absolute;inset:0;width:100%;height:100%}
+.ig-link{border-bottom:1px solid var(--magenta);padding-bottom:2px}
+.cta{margin-top:clamp(56px,10vh,110px);background:var(--ink);color:var(--ivory);padding:clamp(32px,6vw,72px);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px}
+.cta p{font-family:var(--serif);font-size:clamp(28px,4vw,52px);line-height:1.05;margin:0;max-width:16ch;text-wrap:balance}
+.btn{display:inline-block;border:1px solid var(--ivory);padding:14px 26px;letter-spacing:.2em;text-transform:uppercase;font-size:12px;transition:background .3s,color .3s}
+.btn:hover{background:var(--ivory);color:var(--ink)}
+.next{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:28px 40px;color:var(--stone)}
+.next a{font-family:var(--serif);font-size:clamp(22px,2.6vw,34px);color:var(--ink)}
+.next a span{color:var(--magenta)}
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,6vw,96px);padding-block:clamp(40px,8vh,88px)}
+.contact dl{margin:0;display:grid;gap:22px}
+.contact dt{color:var(--stone)}
+.contact dd{margin:4px 0 0;font-family:var(--serif);font-size:22px;user-select:all}
+form{display:grid;gap:18px}
+label{display:grid;gap:6px}
+input,textarea{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:1px solid rgba(15,14,13,.3);padding:10px 0;border-radius:0}
+input:focus,textarea:focus{outline:none;border-bottom-color:var(--magenta)}
+.form-btn{justify-self:start;background:var(--ink);color:var(--paper);padding:14px 28px;letter-spacing:.2em;text-transform:uppercase;font-size:12px}
+.sent{color:var(--magenta)}
+.note-ex{color:var(--stone);font-size:13px;margin-top:-12px;margin-bottom:24px}
+
+/* ---------- zdjęcia ---------- */
+.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none}
+.panel .ph{filter:saturate(.45) brightness(.82);transition:filter .8s,transform 1.6s cubic-bezier(.2,.7,.1,1)}
+.panel:hover .ph,.panel:focus-visible .ph{filter:none;transform:scale(1.04)}
+.hero.photo .ph{filter:saturate(.85)}
+.work .ph{transition:transform 1.2s cubic-bezier(.2,.7,.1,1)}
+.work:hover .ph{transform:scale(1.04)}
+.work .where{color:var(--stone);font-size:14px;margin-top:-6px}
+.ig-grid a{display:block;aspect-ratio:1;position:relative;overflow:hidden;background:var(--ink)}
+.ig-grid a .ph{transition:transform .8s,filter .6s;filter:saturate(.7)}
+.ig-grid a:hover .ph{transform:scale(1.06);filter:none}
+.body{max-width:58ch;margin:20px 0 22px;color:#3b3631}
+.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,1vw,14px)}
+.gallery div{aspect-ratio:1;position:relative;overflow:hidden;background:var(--ink)}
+.scope a{border-bottom:1px solid transparent}
+.scope a:hover{border-bottom-color:var(--magenta)}
+@media (max-width:760px){.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ---------- notatki projektowe (tylko do prezentacji) ---------- */
+.note{display:none;position:absolute;z-index:4;max-width:260px;background:var(--magenta);color:#fff;font-size:12.5px;line-height:1.45;padding:10px 12px;font-weight:400}
+.note b{display:block;letter-spacing:.14em;text-transform:uppercase;font-size:10px;margin-bottom:3px;opacity:.85}
+body.notes .note{display:block}
+.note.static{position:relative;max-width:none;margin-block:16px}
+.notes-toggle{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;background:var(--magenta);color:#fff;padding:9px 16px;border-radius:999px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+
+@media (max-width:760px){
+  .nav .hide-s{display:none}
+  .home{flex-direction:column;gap:4px}
+  .home:hover .panel,.home .panel:hover{flex-grow:1}
+  .p-txt{display:flex;align-items:baseline;gap:12px;bottom:12px}
+  .p-name{font-size:24px;margin:0}
+  .p-more{display:none}
+  .foot{flex-direction:column;align-items:flex-start;gap:6px}
+  .thesis{white-space:normal}
+  .clients{display:none}
+  .intro,.contact{grid-template-columns:minmax(0,1fr)}
+  .ig-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .note{position:relative;inset:auto!important;max-width:none;margin:8px 0}
+}
+/* pasy nigdy nie znikają: minimalna wysokość, a na wąskich ekranach strona się przewija */
+.app{grid-template-rows:auto minmax(320px,1fr) auto}
+.thesis{text-transform:none;letter-spacing:0}
+@media (max-width:760px){
+  .app{height:auto;min-height:100%}
+  .home{overflow:visible}
+  .home .panel,.home:hover .panel,.home .panel:hover{flex:none;height:clamp(150px,28vh,260px)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- Pięć etapów ---------- */
+.app{grid-template-rows:auto auto minmax(320px,1fr) auto}
+.projbar{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:4px 16px}
+.pb-l{min-width:0}
+.pb-l .label{color:var(--stone)}
+.pb-t{font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.6vw,38px);margin:6px 0 0;line-height:1.05;letter-spacing:-.01em;text-wrap:balance}
+.pb-t em{color:var(--stone);font-size:.6em;margin-left:.4em}
+.pb-r{display:flex;gap:22px;align-items:center}
+.pb-play{border:1px solid rgba(236,230,220,.35);padding:9px 16px;border-radius:999px}
+.pb-play:hover{border-color:var(--magenta)}
+.pb-link{border-bottom:1px solid var(--magenta);padding-bottom:3px}
+.p-stage{font-family:var(--sans);font-style:normal;letter-spacing:.2em;text-transform:uppercase;font-size:10.5px;color:var(--ivory);opacity:.75;margin-left:6px}
+.p-cap{display:block;max-width:30ch;margin-top:10px;font-size:14px;line-height:1.45;color:var(--ivory);opacity:0;transform:translateY(8px);transition:opacity .5s .15s,transform .5s .15s}
+.p-more{display:none}
+.panel:hover .p-cap,.panel:focus-visible .p-cap,.panel.active .p-cap{opacity:1;transform:none}
+.home.touring .panel{flex-grow:.82}
+.home .panel.active{flex-grow:2.3}
+.panel.active .ph{filter:none;transform:scale(1.04)}
+@media (max-width:760px){.p-cap{display:none}.pb-r{width:100%;justify-content:space-between}}
+</style>
+</head>
+<body>
+<a href="index.html" style="position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;background:#0f0e0d;color:#ece6dc;font:400 12px/1 Jost,Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:10px 16px;border-radius:999px;text-decoration:none;box-shadow:0 6px 24px rgba(0,0,0,.25)">&larr; Propozycja</a>
+
+
+<div class="app" id="home">
+  <header class="top">
+    <a class="brand" href="#" aria-label="No Limits Group, strona główna"><span class="mark">nl</span><span class="word">NO LIMITS<small>GROUP</small></span></a>
+    <nav class="nav label" aria-label="Główna">
+      <a href="#realizacje">Realizacje</a>
+      <a href="#kontakt">Kontakt</a>
+      <span class="social">
+        <a href="https://www.instagram.com/nolimits__group/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".6"/></svg></a>
+        <a href="#kontakt" title="Facebook: adres strony do uzupełnienia" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/></svg></a>
+      </span>
+      <span class="lang hide-s"><b>PL</b> / EN</span>
+    </nav>
+  </header>
+
+  <div class="projbar">
+    <div class="pb-l"><span class="label">Jedna realizacja · pięć etapów · jeden zespół</span><h1 class="pb-t">Podium Giorgio Armani <em>Westfield Arkadia</em></h1></div>
+    <div class="pb-r"><button class="label pb-play" id="tourBtn" type="button">Odtwórz etapy</button><a class="label pb-link" href="#r-armani">Cała realizacja →</a></div>
+  </div>
+  <main class="home" id="panels" style="position:relative"></main>
+
+  <footer class="foot label">
+    <span class="thesis">Od pomysłu do gotowego stoiska. Wszystko pod jednym dachem.</span>
+    <span class="clients" id="clients"></span>
+  </footer>
+</div>
+
+<section class="view" id="view" hidden></section>
+
+<button class="notes-toggle" id="notesBtn" type="button" aria-pressed="false">Notatki projektowe</button>
+
+<script>
+/* ---------- treść ---------- */
+const SERVICES = [
+  {id:"agencja", n:"I", name:"Agencja", art:"bokeh", img:"ig/C9Cy5XFov4Q.jpg",
+   kicker:"Strategia i koncepcja",
+   teaser:"Kampanie i strefy marek w perfumeriach, od briefu do wdrożenia.",
+   lead:"Od ponad 20 lat pracujemy dla najbardziej wymagającego rynku: kosmetyków i perfum premium. Zaczynamy od briefu marki, kończymy na gotowej strefie w Sephorze, Notino czy w galerii handlowej.",
+   scope:["Koncepcje kampanii trade marketingowych","Strefy marek i podia w perfumeriach","Materiały POS: od pomysłu do logistyki","Koordynacja wdrożeń w sieciach handlowych"]},
+  {id:"studio", n:"II", name:"Studio graficzne", art:"grid", img:"ig/C87pgc_oHw7.jpg",
+   kicker:"Projekt i wizualizacje 3D",
+   teaser:"Każdy wielki projekt zaczyna się od wizji. U nas od wizualizacji 3D.",
+   lead:"Każdy wielki projekt zaczyna się od wizji. Zanim powstanie pierwszy element, klient ogląda podium w wizualizacji 3D: kolory, materiały, światło i ułożenie produktów. Projektujemy tak, żeby dało się to wyprodukować.",
+   scope:["Wizualizacje 3D stoisk i podiów","Key visuale i adaptacje kampanii","Projekty ekspozytorów i opakowań","Przygotowanie plików do produkcji"]},
+  {id:"drukarnia", n:"III", name:"Drukarnia", art:"halftone", img:"ig/C8ylWxcoQuF.jpg",
+   kicker:"Druk wielkoformatowy i hybrydowy",
+   teaser:"Wielkoformatowy druk hybrydowy z kontrolą koloru pod wytyczne marek.",
+   lead:"Własny park maszynowy to kontrola koloru, terminów i jakości bez pośredników. Odcień podkładu na ekspozytorze musi się zgadzać z produktem, więc kolor sprawdzamy u siebie, a nie u podwykonawcy.",
+   scope:["Wielkoformatowy druk hybrydowy","Druk na płytach, foliach i tekstyliach","Krótkie serie i personalizacja","Kontrola koloru pod wytyczne marek"]},
+  {id:"introligatornia", n:"IV", name:"Introligatornia", art:"pages", img:"ig/C81H9MhothE.jpg",
+   kicker:"Wykończenie i detal",
+   teaser:"Luksus tkwi w szczegółach. Tu powstają.",
+   lead:"Luksus tkwi w szczegółach. Nasz dział produkcji to mistrzowie rzemiosła: wykończenia, oprawy, akrylowe postumenty i ręczny montaż. Używamy wyłącznie najlepszej jakości materiałów.",
+   scope:["Wykończenia i uszlachetnienia","Oprawy, katalogi, zestawy prezentowe","Postumenty i elementy z akrylu","Konfekcjonowanie i ręczny montaż"]},
+  {id:"eventy", n:"V", name:"Eventy", art:"spot", img:"ig/C9CyhHVoYLx.jpg",
+   kicker:"Wydarzenia i aktywacje",
+   teaser:"Idôle House w Westfield Arkadia. Takie przestrzenie budujemy.",
+   lead:"Projektujemy, budujemy i prowadzimy przestrzenie, do których się wchodzi: pop-upy marek w galeriach, interaktywne strefy, premiery produktów. Jak Idôle House dla Lancôme w Westfield Arkadia.",
+   scope:["Pop-upy i strefy marek w galeriach","Premiery produktów i eventy prasowe","Scenografia, zabudowa i oświetlenie","Obsługa wydarzenia od A do Z"]},
+];
+/* realizacje z Instagrama @nolimits__group (opisy na podstawie postów klienta) */
+const IG="https://www.instagram.com/nolimits__group/p/";
+const WORKS = [
+  {id:"armani", t:"Podium Giorgio Armani", where:"Westfield Arkadia, Warszawa", y:"2024", c:["studio","drukarnia","introligatornia"],
+   cover:"ig/C8w9G6ZI-eX.jpg", gallery:["ig/C87pgc_oHw7.jpg","ig/C835WW9oC3F.jpg","ig/C833vK4op6d.jpg","ig/C81H9MhothE.jpg","ig/C8ylWxcoQuF.jpg","ig/C8w9G6ZI-eX.jpg"],
+   quote:"Idealne połączenie sztuki rzemiosła i innowacji.",
+   text:"Podium dla marki Armani w Westfield Arkadia: od wizualizacji 3D, przez paletę odcieni podkładów i pomadek, po akrylowe postumenty pod produkty. Nasz zespół dołożył wszelkich starań, żeby każdy detal był perfekcyjny.",
+   post:IG+"C8w9G6ZI-eX/"},
+  {id:"idole-house", t:"Lancôme Idôle House", where:"Westfield Arkadia, Warszawa", y:"2024", c:["eventy","agencja"],
+   cover:"ig/C9CyhHVoYLx.jpg", gallery:["ig/C9CyhHVoYLx.jpg"],
+   quote:"Odkryjcie piękno w nowym wydaniu.",
+   text:"Pop-up marki Lancôme w atrium galerii: monumentalna konstrukcja z wielkoformatowymi ekranami i wejściem do strefy marki, otwarta dla klientów galerii do 6 lipca.",
+   post:IG+"C9CyhHVoYLx/"},
+  {id:"lancome-sephora", t:"Podium Lancôme Idôle w Sephorze", where:"Sephora, Westfield Arkadia", y:"2024", c:["agencja","drukarnia"],
+   cover:"ig/C9MjRX3oBb8.jpg", gallery:["ig/C9MjRX3oBb8.jpg"],
+   quote:"Małe podium, pełna oprawa marki.",
+   text:"Wyspa produktowa Lip Idôle w perfumerii Sephora: podświetlana grafika, lustra, postumenty i ekspozycja testerów w kolorystyce kampanii.",
+   post:IG+"C9MjRX3oBb8/"},
+  {id:"lancome-notino", t:"Dekoracja Lancôme w Notino", where:"Perfumeria Notino", y:"2024", c:["agencja","drukarnia","studio"],
+   cover:"ig/C9Cy5XFov4Q.jpg", gallery:["ig/C9Cy5XFov4Q.jpg"],
+   quote:"Kampania marki przeniesiona na ścianę perfumerii.",
+   text:"Ściana marki Lancôme z wielkoformatową grafiką kampanii Lip Idôle, podświetlanym logo i ekspozytorami produktów.",
+   post:IG+"C9Cy5XFov4Q/"},
+];
+const FEED = [["C8w9G6ZI-eX","Armani"],["C9MjRX3oBb8","Lancôme, Sephora"],["C9CyhHVoYLx","Idôle House"],["C8ylWxcoQuF","Armani"],["C9Cy5XFov4Q","Lancôme, Notino"],["C833vK4op6d","Armani"]];
+const CLIENTS = ["Giorgio Armani","Lancôme","Estée Lauder","Moët Hennessy","Givenchy","Yves Saint Laurent","Dolce & Gabbana","Chanel","Gucci","Prada","Hugo Boss","Clarins","L'Oréal","Sephora","Dom Pérignon","Samsung"];
+
+/* ---------- generatywne "zdjęcia" (zastępcze, do podmiany na foto/wideo klienta) ---------- */
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const IV="236,230,220", MG="176,26,95";
+const ART = {
+  bokeh(c,w,h,r){
+    c.fillStyle="#141210";c.fillRect(0,0,w,h);
+    c.globalCompositeOperation="lighter";
+    for(let i=0;i<46;i++){
+      const x=r()*w,y=h*.15+r()*h*.75,rad=(8+r()*58)*Math.max(w,h)/700,a=.05+r()*.28,col=r()<.16?MG:(r()<.5?"255,214,170":IV);
+      const g=c.createRadialGradient(x,y,0,x,y,rad);g.addColorStop(0,`rgba(${col},${a})`);g.addColorStop(.72,`rgba(${col},${a*.75})`);g.addColorStop(1,`rgba(${col},0)`);
+      c.fillStyle=g;c.beginPath();c.arc(x,y,rad,0,7);c.fill();
+    }
+    c.globalCompositeOperation="source-over";
+  },
+  grid(c,w,h,r){
+    c.fillStyle="#161412";c.fillRect(0,0,w,h);
+    const s=Math.max(18,Math.min(w,h)/18);c.strokeStyle=`rgba(${IV},.06)`;c.lineWidth=1;
+    for(let x=0;x<w;x+=s){c.beginPath();c.moveTo(x+.5,0);c.lineTo(x+.5,h);c.stroke()}
+    for(let y=0;y<h;y+=s){c.beginPath();c.moveTo(0,y+.5);c.lineTo(w,y+.5);c.stroke()}
+    const cx=w*.5,cy=h*.42,R=Math.min(w,h)*.34;
+    c.strokeStyle=`rgba(${IV},.32)`;c.beginPath();c.arc(cx,cy,R,0,7);c.stroke();
+    c.beginPath();c.arc(cx,cy,R*.618,0,7);c.stroke();
+    c.beginPath();c.moveTo(cx-R*1.3,cy);c.lineTo(cx+R*1.3,cy);c.moveTo(cx,cy-R*1.3);c.lineTo(cx,cy+R*1.3);c.stroke();
+    c.font=`italic ${R*1.5}px "Bodoni Moda", Didot, Georgia, serif`;c.textAlign="center";c.textBaseline="middle";
+    c.strokeStyle=`rgba(${IV},.75)`;c.lineWidth=1.2;c.strokeText("a",cx,cy+R*.05);
+    c.strokeStyle=`rgba(${MG},.95)`;c.fillStyle=`rgba(${MG},.95)`;c.lineWidth=1;
+    const p=[[cx-R*.9,cy+R*.75],[cx-R*.2,cy+R*1.25],[cx+R*.6,cy+R*.2],[cx+R*1.05,cy+R*.95]];
+    c.beginPath();c.moveTo(...p[0]);c.bezierCurveTo(...p[1],...p[2],...p[3]);c.stroke();
+    c.setLineDash([3,3]);c.beginPath();c.moveTo(...p[0]);c.lineTo(...p[1]);c.moveTo(...p[3]);c.lineTo(...p[2]);c.stroke();c.setLineDash([]);
+    p.forEach(q=>c.fillRect(q[0]-3,q[1]-3,6,6));
+    const m=Math.min(w,h)*.08;c.strokeStyle=`rgba(${IV},.5)`;
+    [[m,m,1,1],[w-m,m,-1,1],[m,h-m,1,-1],[w-m,h-m,-1,-1]].forEach(([x,y,dx,dy])=>{c.beginPath();c.moveTo(x-dx*m*.8,y);c.lineTo(x-dx*m*.2,y);c.moveTo(x,y-dy*m*.8);c.lineTo(x,y-dy*m*.2);c.stroke()});
+  },
+  halftone(c,w,h,r){
+    c.fillStyle="#131110";c.fillRect(0,0,w,h);
+    const pass=(ang,col,step,amp,ox)=>{
+      c.save();c.translate(w/2,h/2);c.rotate(ang);c.fillStyle=col;
+      const D=Math.hypot(w,h)/2;
+      for(let y=-D;y<D;y+=step)for(let x=-D;x<D;x+=step){
+        const gx=Math.cos(-ang)*x-Math.sin(-ang)*y+w/2, gy=Math.sin(-ang)*x+Math.cos(-ang)*y+h/2;
+        const v=Math.max(0,Math.sin(gx/w*3.1+ox)*.5+.5)*Math.max(0,1-Math.abs(gy-h*.48)/(h*.62));
+        const rr=step*.5*v*amp; if(rr>.4){c.beginPath();c.arc(x,y,rr,0,7);c.fill()}
+      }
+      c.restore();
+    };
+    const st=Math.max(7,Math.min(w,h)/34);
+    pass(.26,`rgba(${IV},.62)`,st,1,0);
+    pass(1.31,`rgba(${MG},.55)`,st,.9,1.6);
+  },
+  pages(c,w,h,r){
+    c.fillStyle="#151311";c.fillRect(0,0,w,h);
+    const n=70,top=h*.16,bot=h*.86;
+    for(let i=0;i<n;i++){
+      const t=i/(n-1),y=top+(bot-top)*t,bend=(t-.5)*h*.22;
+      c.strokeStyle=`rgba(${IV},${.1+.4*Math.sin(t*Math.PI)})`;c.lineWidth=1;
+      c.beginPath();c.moveTo(w*.12,y);c.bezierCurveTo(w*.42,y+bend*.2,w*.62,y+bend,w*.95,y+bend*1.25);c.stroke();
+    }
+    c.strokeStyle=`rgba(${MG},.95)`;c.lineWidth=1.4;const sx=w*.2;
+    for(let y=top-6;y<bot+6;y+=h*.05){c.beginPath();c.moveTo(sx-5,y);c.lineTo(sx+5,y+h*.022);c.moveTo(sx+5,y);c.lineTo(sx-5,y+h*.022);c.stroke()}
+    c.strokeStyle=`rgba(${IV},.55)`;c.beginPath();c.moveTo(w*.12,top);c.lineTo(w*.12,bot);c.stroke();
+  },
+  spot(c,w,h,r){
+    c.fillStyle="#0e0d0c";c.fillRect(0,0,w,h);
+    c.globalCompositeOperation="lighter";
+    [[.22,.0,.28,MG],[.5,.0,.38,IV],[.8,0,.26,"255,214,170"]].forEach(([x,y,spread,col],i)=>{
+      const X=w*x,g=c.createLinearGradient(X,0,X,h*.92);g.addColorStop(0,`rgba(${col},.42)`);g.addColorStop(1,`rgba(${col},0)`);
+      c.fillStyle=g;c.beginPath();c.moveTo(X-4,0);c.lineTo(X+4,0);c.lineTo(X+w*spread,h*.9);c.lineTo(X-w*spread,h*.9);c.closePath();c.fill();
+      const f=c.createRadialGradient(X,h*.9,0,X,h*.9,w*spread*1.1);f.addColorStop(0,`rgba(${col},.32)`);f.addColorStop(1,`rgba(${col},0)`);
+      c.fillStyle=f;c.save();c.translate(X,h*.9);c.scale(1,.18);c.beginPath();c.arc(0,0,w*spread*1.1,0,7);c.restore();c.fill();
+    });
+    for(let i=0;i<90;i++){c.fillStyle=`rgba(${IV},${r()*.25})`;c.fillRect(r()*w,r()*h*.85,1.2,1.2)}
+    c.globalCompositeOperation="source-over";
+  }
+};
+const canvases=[];
+function paint(cv){
+  const b=cv.getBoundingClientRect(),d=Math.min(2,window.devicePixelRatio||1);
+  if(!b.width||!b.height)return;
+  /* pasy zmieniają szerokość przy hover: malujemy w szerokości rozwiniętego pasa, CSS przycina (object-fit) */
+  const W=cv.closest(".panel")&&innerWidth>760?Math.max(b.width,cv.closest(".home").clientWidth*.42):b.width;
+  cv.width=Math.round(W*d);cv.height=Math.round(b.height*d);
+  const c=cv.getContext("2d");c.setTransform(d,0,0,d,0,0);
+  ART[cv.dataset.art](c,W,b.height,rng(+cv.dataset.seed||7));
+}
+function canvas(art,seed){const cv=document.createElement("canvas");cv.dataset.art=art;cv.dataset.seed=seed;cv.setAttribute("aria-hidden","true");canvases.push(cv);return cv}
+function repaint(){canvases.forEach(cv=>cv.isConnected&&paint(cv))}
+
+/* ---------- strona główna: jedna realizacja w pięciu etapach ---------- */
+const STAGES=[
+  {stage:"Koncepcja", img:"ig/C835WW9oC3F.jpg", cap:"Język marki Armani przełożony na podium."},
+  {stage:"Wizualizacja 3D", img:"ig/C87pgc_oHw7.jpg", cap:"Klient ogląda podium, zanim powstanie pierwszy element."},
+  {stage:"Kolor", img:"ig/C8ylWxcoQuF.jpg", cap:"Paleta odcieni podkładów i pomadek zgodna z produktem."},
+  {stage:"Detal", img:"ig/C81H9MhothE.jpg", cap:"Akrylowe postumenty pod Luminous Silk. Luksus tkwi w szczegółach."},
+  {stage:"Ekspozycja", img:"ig/C8w9G6ZI-eX.jpg", cap:"Gotowe podium w Westfield Arkadia."},
+];
+const panels=document.getElementById("panels");
+SERVICES.forEach((s,i)=>{
+  const a=document.createElement("a");a.className="panel";a.href="#"+s.id;
+  const st=STAGES[i];
+  a.insertAdjacentHTML("beforeend",`<img class="ph" src="${st.img}" alt="${st.cap}" loading="eager"><div class="p-txt"><div class="p-num">${s.n} <span class="p-stage">${st.stage}</span></div><h2 class="p-name">${s.name}</h2><span class="p-cap">${st.cap}</span><span class="p-more">${s.teaser}<br><span class="label">Zobacz</span></span></div>`);
+  panels.appendChild(a);
+});
+panels.insertAdjacentHTML("beforeend",`
+ <div class="note" style="left:12px;top:12px"><b>Jeden projekt, pięć etapów</b>Wszystkie pasy pokazują tę samą realizację na kolejnych etapach. Przy następnej wizycie strona pokazuje inną realizację z panelu (np. Lancôme Idôle House).</div>
+ <div class="note" style="right:12px;top:12px"><b>Zdjęcia</b>Kadry z serii Armani na Instagramie @nolimits__group. Docelowo zdjęcia lub 6-sekundowe filmy z każdego etapu.</div>`);
+/* jednorazowy przegląd etapów I→V po wejściu na stronę */
+let tourT=[];
+function stopTour(){tourT.forEach(clearTimeout);tourT=[];panels.classList.remove("touring");panels.querySelectorAll(".panel.active").forEach(p=>p.classList.remove("active"))}
+function tour(){
+  stopTour(); if(matchMedia("(prefers-reduced-motion:reduce)").matches||innerWidth<=760)return;
+  const ps=[...panels.querySelectorAll(".panel")];panels.classList.add("touring");
+  ps.forEach((p,k)=>tourT.push(setTimeout(()=>{ps.forEach(x=>x.classList.remove("active"));p.classList.add("active")},400+k*1700)));
+  tourT.push(setTimeout(stopTour,400+ps.length*1700));
+}
+panels.addEventListener("mouseenter",stopTour);
+document.getElementById("tourBtn").onclick=tour;
+setTimeout(tour,600);
+document.getElementById("clients").innerHTML=CLIENTS.map(c=>`<span>${c}</span>`).join("")+
+  `<div class="note" style="right:var(--frame);bottom:46px"><b>Pasek klientów</b>Nazwy jako tekst (widoczne dla Google). Przed publikacją potwierdzić zgody marek.</div>`;
+
+/* ---------- podstrony ---------- */
+const view=document.getElementById("view");
+const head=`<header class="top"><a class="back label" href="#"><span>←</span> Wszystkie usługi</a>
+  <a class="brand" href="#" aria-label="Strona główna"><span class="mark">nl</span><span class="word">NO LIMITS<small>GROUP</small></span></a>
+  <nav class="nav label" aria-label="Podstrona"><a href="#realizacje" class="hide-s">Realizacje</a><a href="#kontakt">Kontakt</a></nav></header>`;
+const svcName=id=>SERVICES.find(x=>x.id===id).name;
+function workCard(w){return `<a class="work" href="#r-${w.id}"><div class="img"><img class="ph" src="${w.cover}" alt="${w.t}" loading="lazy"></div><div class="meta label"><span>${w.c.map(svcName).join(" · ")}</span><span>${w.y}</span></div><h3>${w.t}</h3><span class="where">${w.where}</span></a>`}
+function igStrip(){return `<section class="ig wrap"><div class="sec-h"><h2>Na Instagramie</h2><a class="label ig-link" href="https://www.instagram.com/nolimits__group/" target="_blank" rel="noopener">@nolimits__group</a></div>
+  <div class="ig-grid">${FEED.map(([id,alt])=>`<a href="${IG+id}/" target="_blank" rel="noopener"><img class="ph" src="ig/${id}.jpg" alt="${alt}" loading="lazy"></a>`).join("")}</div>
+  <div class="note static"><b>Integracja Meta</b>Ostatnie posty pobierane automatycznie z Instagrama (oficjalne API Meta). Nowa realizacja dodana w panelu może sama trafić na FB i IG.</div></section>`}
+function renderCase(w){
+  const others=WORKS.filter(x=>x!==w);
+  view.innerHTML=head+`<div class="wrap"><div class="hero photo"><img class="ph" src="${w.cover}" alt=""><div class="hero-txt"><span class="label">${w.where} · ${w.y}</span><h1>${w.t}</h1></div></div>
+   <div class="intro"><div><p class="lead">„${w.quote}”</p><p class="body">${w.text}</p><a class="label ig-link" href="${w.post}" target="_blank" rel="noopener">Zobacz post na Instagramie</a></div>
+     <ul class="scope">${w.c.map((id,k)=>`<li><i>${SERVICES.find(s=>s.id===id).n}</i><a href="#${id}">${svcName(id)}</a></li>`).join("")}</ul></div>
+   ${w.gallery.length>1?`<div class="sec-h"><h2>Etapy projektu</h2><span class="label">${w.gallery.length} kadrów</span></div><div class="gallery">${w.gallery.map(g=>`<div><img class="ph" src="${g}" alt="${w.t}" loading="lazy"></div>`).join("")}</div>`:""}
+   <div class="note static"><b>Szablon realizacji</b>Tak wygląda każda realizacja dodana w panelu: zdjęcie główne, cytat, opis, galeria i usługi, które brały udział. Link do posta na IG dodaje się automatycznie.</div>
+   <div class="sec-h" style="margin-top:clamp(48px,8vh,88px)"><h2>Inne realizacje</h2><a class="label" href="#realizacje">Wszystkie</a></div>
+   <div class="works">${others.map(workCard).join("")}</div>
+   <div class="cta"><p>Zróbmy razem następną.</p><a class="btn" href="#kontakt">Porozmawiajmy</a></div><div style="height:40px"></div></div>`;
+}
+function hydrate(){view.querySelectorAll("[data-art]").forEach(el=>{el.appendChild(canvas(el.dataset.art,el.dataset.seed));});requestAnimationFrame(repaint)}
+
+function renderService(s,i){
+  const next=SERVICES[(i+1)%5];const ws=WORKS.filter(w=>w.c.includes(s.id));
+  view.innerHTML=head+`<div class="wrap"><div class="hero photo"><img class="ph" src="${s.img}" alt=""><div class="hero-txt"><span class="label">${s.n} · ${s.kicker}</span><h1>${s.name}</h1></div></div>
+   <div class="intro"><p class="lead">${s.lead}</p><ul class="scope">${s.scope.map((x,k)=>`<li><i>${k+1}</i><span>${x}</span></li>`).join("")}</ul></div>
+   <div class="sec-h"><h2>Wybrane realizacje</h2><a class="label" href="#realizacje">Wszystkie realizacje</a></div>
+   <div class="works">${ws.map(workCard).join("")}</div>
+   <div class="note static"><b>Panel klienta</b>Realizacje dodaje klient: tytuł, marka, kategoria, zdjęcia. Pozycja pojawia się tu i w „Realizacjach” bez udziału programisty.</div></div>
+   ${igStrip()}
+   <div class="wrap"><div class="cta"><p>Masz premierę albo nowy projekt?</p><a class="btn" href="#kontakt">Porozmawiajmy</a></div>
+   <div class="next label"><span>Następny etap</span><a href="#${next.id}">${next.n} · ${next.name} <span>→</span></a></div></div>`;
+  hydrate();
+}
+function renderWorks(filter){
+  view.innerHTML=head+`<div class="wrap" style="padding-block:clamp(36px,7vh,72px) 0"><div class="sec-h"><h2 style="font-size:clamp(40px,6vw,80px)">Realizacje</h2><span class="label">${WORKS.length} pozycji</span></div>
+   <div class="chips" role="group" aria-label="Filtr kategorii"><button class="chip" data-f="" aria-pressed="${!filter}">Wszystkie</button>${SERVICES.map(s=>`<button class="chip" data-f="${s.id}" aria-pressed="${filter===s.id}">${s.name}</button>`).join("")}</div>
+   <div class="works">${WORKS.filter(w=>!filter||w.c.includes(filter)).map(workCard).join("")}</div>
+   <div class="note static"><b>Dodaj realizację</b>W panelu: zdjęcia + opis → publikacja na stronie, opcjonalnie automatyczny post na Facebooku i Instagramie (n8n).</div></div>
+   ${igStrip()}<div class="wrap"><div class="cta"><p>Zróbmy razem następną.</p><a class="btn" href="#kontakt">Porozmawiajmy</a></div><div style="height:40px"></div></div>`;
+  view.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{renderWorks(b.dataset.f);});
+  hydrate();
+}
+function renderContact(){
+  view.innerHTML=head+`<div class="wrap"><div class="hero" data-art="bokeh" data-seed="77" style="height:clamp(200px,32vh,340px)"><div class="hero-txt"><span class="label">No Limits Group</span><h1>Kontakt</h1></div></div>
+   <div class="contact"><dl>
+     <div><dt class="label">Adres</dt><dd>ul. Genewska 21<br>03-940 Warszawa</dd></div>
+     <div><dt class="label">Telefon</dt><dd>+48 606 958 958</dd></div>
+     <div><dt class="label">Biuro</dt><dd>22 616 30 77</dd></div>
+     <div><dt class="label">E-mail</dt><dd>nolimits@post.pl</dd></div>
+   </dl>
+   <form id="f" novalidate>
+     <label for="f-name"><span class="label">Imię i nazwisko</span><input id="f-name" required></label>
+     <label for="f-brand"><span class="label">Marka / firma</span><input id="f-brand"></label>
+     <label for="f-mail"><span class="label">E-mail</span><input id="f-mail" type="email" required></label>
+     <label for="f-msg"><span class="label">O projekcie</span><textarea id="f-msg" rows="4"></textarea></label>
+     <button class="form-btn" type="submit">Wyślij</button><p class="sent" id="sent" hidden>To makieta: formularz jeszcze nie wysyła wiadomości.</p>
+   </form></div>
+   <div class="note static"><b>Kontakt</b>Docelowo formularz wysyła e-mail na firmową skrzynkę, a obok jest przycisk „Napisz na WhatsApp / Messengerze”. Warto przejść z adresu @post.pl na adres w domenie firmy.</div><div style="height:48px"></div></div>`;
+  view.querySelector("#f").addEventListener("submit",e=>{e.preventDefault();view.querySelector("#sent").hidden=false});
+  hydrate();
+}
+function route(){
+  const h=location.hash.slice(1);const i=SERVICES.findIndex(s=>s.id===h);
+  const w=WORKS.find(x=>"r-"+x.id===h);
+  if(i>-1)renderService(SERVICES[i],i);else if(w)renderCase(w);else if(h==="realizacje")renderWorks("");else if(h==="kontakt")renderContact();
+  else{view.hidden=true;view.innerHTML="";requestAnimationFrame(repaint);return}
+  view.hidden=false;view.scrollTop=0;
+}
+window.addEventListener("hashchange",route);
+let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(repaint,120)});
+const btn=document.getElementById("notesBtn");
+btn.onclick=()=>{const on=document.body.classList.toggle("notes");btn.setAttribute("aria-pressed",on);btn.textContent=on?"Ukryj notatki":"Notatki projektowe"};
+route();repaint();
+if(document.fonts)document.fonts.ready.then(repaint);
+</script>
+
+</body>
+</html>
